@@ -27,12 +27,14 @@ def filter_csv(input_csv, output_csv):
                     thumbnail_link = row.get("thumbnail_link", "").strip()
                     artists_link = row.get("artists_link", "").strip()
                     genes_link = row.get("genes_link", "").strip()
+                    similar_link = row.get("similar_link", "").strip()
                     
                     if (
                         category in valid_categories
                         and thumbnail_link  # Ensure not empty
                         and artists_link    # Ensure not empty
                         and genes_link    # Ensure not empty
+                        and similar_link
                     ):
                         writer.writerow(row)
         

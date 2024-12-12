@@ -21,6 +21,20 @@ def get_access_token():
     response.raise_for_status()  # Raise an error for bad status codes
     return response.json()["token"]
 
+def get_access_token():
+    """
+    Fetch the access token from the Artsy API.
+    """
+    auth_url = f"{API_BASE_URL}/tokens/xapp_token"
+    payload = {
+        "client_id": CLIENT_ID,
+        "client_secret": CLIENT_SECRET,
+    }
+    response = requests.post(auth_url, json=payload)
+    response.raise_for_status()  # Raise an error for bad status codes
+    return response.json()["token"]
+
+
 def fetch_artworks(token):
     """
     Fetch all artworks using the Artsy API.
