@@ -73,44 +73,54 @@ def generate_transaction_data(token, input_csv, output_csv):
         input_csv (str): Path to the input CSV file (user-artworks.csv).
         output_csv (str): Path to the output CSV file.
     """
-    used_transaction_ids = set()
     try:
         with open(input_csv, "r", encoding="utf-8") as infile, open(output_csv, "w", encoding="utf-8", newline="") as outfile:
             reader = csv.DictReader(infile)
             fieldnames = ["transaction_id", "user_id", "artwork_id", "thumbnail_link"]
-            writer = csv.DictWriter(outfile, fieldnames=fieldnames)
-            writer.writeheader()
-            counter = 0
-            for row in reader:
-                user_id = row.get("id")
-                similar_link = row.get("similar_link")
-                r_artwork_id = row.get("artwork_id")
-                r_thumbnail_link= row.get("thumbnail_link")
-
-                if not similar_link:
-                    continue
-                writer.writerow({
-                    "transaction_id": uuid.uuid4(),
-                    "user_id": user_id,
-                    "artwork_id": r_artwork_id,
-                    "thumbnail_link": r_thumbnail_link,
-                })
-                # Fetch artwork data from the API
-                artworks = get_artwork_data(token, similar_link)
+            
+            with open(output_csv, "w", encoding="utf-8", newline="") as outfile:
                 
-                # Rate limit: Wait to comply with the API's limit of 5 requests per second
-                time.sleep(0.2)  # 200ms pause between requests
+                writer = csv.DictWriter(outfile, fieldnames=fieldnames)
+                writer.writeheader()
 
-                # Create a row for each artwork
-                for artwork in artworks:
+                batch = []
+                batch_size=100
+                counter = 0
+
+                for row in reader:
+                    user_id = row.get("id")
+                    similar_link = row.get("similar_link")
+                    r_artwork_id = row.get("artwork_id")
+                    r_thumbnail_link= row.get("thumbnail_link")
+
+                    if not similar_link:
+                        continue
                     writer.writerow({
                         "transaction_id": uuid.uuid4(),
                         "user_id": user_id,
-                        "artwork_id": artwork["id"],
-                        "thumbnail_link": artwork["thumbnail_link"]
+                        "artwork_id": r_artwork_id,
+                        "thumbnail_link": r_thumbnail_link,
                     })
-                print(str((counter / 54000) * 100) + "% done")
-                counter+=1
+                    # Fetch artwork data from the API
+                    artworks = get_artwork_data(token, similar_link)
+                    # Rate limit: Wait to comply with the API's limit of 5 requests per second
+                    # time.sleep(0.2)  # 200ms pause between requests
+
+                    # Create a row for each artwork
+                    for artwork in artworks:
+                        batch.append({
+                            "transaction_id": uuid.uuid4(),
+                            "user_id": user_id,
+                            "artwork_id": artwork["id"],
+                            "thumbnail_link": artwork["thumbnail_link"]
+                        })
+                        batchlength = len(batch)
+                        if batchlength >= batch_size:
+                            writer.writerows(batch)
+                            batch = []
+                    print("Batch length " + str(batchlength))
+                    print(str((counter / 54000) * 100) + "% done")
+                    counter+=1
 
         print(f"Transaction data written to {output_csv}.")
 
@@ -125,7 +135,7 @@ def main():
         input_csv = "user-artworks.csv"  # Path to the input CSV file
         output_csv = "transaction-data.csv"  # Path to the output CSV file
         generate_transaction_data(token, input_csv, output_csv)
-        print("Artworks saved to artworks.json")
+        print("Artworks saved to " + output_csv)
     except Exception as e:
         print(f"An error occurred: {e}")
 
