@@ -22,6 +22,7 @@ def generate_openai_batch_jsonl(input_csv, output_jsonl):
                         "body": {
                             "model": "gpt-4o-mini",  # Specify the OpenAI model
                             "messages": [
+                                {"role": "system", "content": "You are an expert art critic and designer."},
                                 {
                                     "role": "user",
                                     "content": [
