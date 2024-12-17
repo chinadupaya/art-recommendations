@@ -20,18 +20,22 @@ def generate_openai_batch_jsonl(input_csv, output_jsonl):
                         "method": "POST",
                         "url": "/v1/chat/completions",
                         "body": {
-                            "model": "gpt-4",  # Specify the OpenAI model
+                            "model": "gpt-4o-mini",  # Specify the OpenAI model
                             "messages": [
                                 {
-                                    "role": "system",
-                                    "content": "You are an expert art critic and designer."
-                                },
-                                {
                                     "role": "user",
-                                    "content": f"Describe the image in this link by color, mood, and aesthetic: {thumbnail_link}"
+                                    "content": [
+                                        {"type": "text", "text": "Describe this image by color, mood, and aesthetic in no more than 4 lines of text"},
+                                        {
+                                            "type": "image_url",
+                                            "image_url": {
+                                            "url": thumbnail_link,
+                                            },
+                                        },
+                                    ],
                                 }
                             ],
-                            "max_tokens": 1000
+                            "max_tokens": 300
                         }
                     }
                     # Write the JSON object as a line in the .jsonl file
@@ -44,6 +48,6 @@ def generate_openai_batch_jsonl(input_csv, output_jsonl):
 
 # Usage
 if __name__ == "__main__":
-    input_csv = "filtered_artworks.csv"  # Replace with your filtered CSV file path
+    input_csv = "../data/filtered_artworks.csv"  # Replace with your filtered CSV file path
     output_jsonl = "openai_batch_requests.jsonl"  # Output JSONL file path
     generate_openai_batch_jsonl(input_csv, output_jsonl)
