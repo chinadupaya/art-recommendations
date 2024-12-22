@@ -29,20 +29,20 @@ def get_feature_store():
 ########################
 
 
-def create_customers_feature_group(fs, df: pd.DataFrame, online_enabled: bool = True):
-    customers_fg = fs.get_or_create_feature_group(
-        name="customers",
-        description="Customers data including age and postal code",
+def create_users_feature_group(fs, df: pd.DataFrame, online_enabled: bool = True):
+    users_fg = fs.get_or_create_feature_group(
+        name="users",
+        description="Users data including age and gender",
         version=1,
-        primary_key=["customer_id"],
+        primary_key=["user_id"],
         online_enabled=online_enabled,
     )
-    customers_fg.insert(df, wait=True)
+    users_fg.insert(df, wait=True)
 
     for desc in constants.customer_feature_descriptions:
-        customers_fg.update_feature_description(desc["name"], desc["description"])
+        users_fg.update_feature_description(desc["name"], desc["description"])
 
-    return customers_fg
+    return users_fg
 
 
 def create_articles_feature_group(
