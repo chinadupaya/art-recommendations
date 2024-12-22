@@ -118,7 +118,7 @@ def create_ranking_feature_group(
         name="ranking",
         version=1,
         description="Derived feature group for ranking",
-        primary_key=["customer_id", "artwork_id"],
+        primary_key=["user_id", "artwork_id"],
         parents=parents,
         online_enabled=online_enabled,
     )

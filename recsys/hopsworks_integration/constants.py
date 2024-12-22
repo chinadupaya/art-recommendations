@@ -2,7 +2,7 @@ from hsfs.feature import Feature
 
 ### Post ingestion format.###
 
-customer_feature_descriptions = [
+user_feature_descriptions = [
     {"name": "user_id", "description": "Unique identifier for each user."},
     {"name": "age", "description": "Age of the user."},
     {"name": "preference", "description": "Preference of the user."},
@@ -10,12 +10,12 @@ customer_feature_descriptions = [
         "name": "gender",
         "description": "User gender",
     },
-    {"name": "age_group", "description": "Categorized age group of the customer."},
+    {"name": "age_group", "description": "Categorized age group of the user."},
 ]
 
 transactions_feature_descriptions = [
     {"name": "t_dat", "description": "Timestamp of the data record."},
-    {"name": "user_id", "description": "Unique identifier for each customer."},
+    {"name": "user_id", "description": "Unique identifier for each user."},
     {"name": "artwork_id", "description": "Identifier for the liked artwork."},
     {"name": "year", "description": "Year of the transaction."},
     {"name": "month", "description": "Month of the transaction."},
@@ -25,7 +25,7 @@ transactions_feature_descriptions = [
 
 interactions_feature_descriptions = [
     {"name": "t_dat", "description": "Timestamp of the interaction."},
-    {"name": "user_id", "description": "Unique identifier for each customer."},
+    {"name": "user_id", "description": "Unique identifier for each user."},
     {
         "name": "artwork_id",
         "description": "Identifier for the artwork that was interacted with.",
@@ -36,34 +36,21 @@ interactions_feature_descriptions = [
     },
     {
         "name": "prev_artwork_id",
-        "description": "Previous artwork that the customer interacted with, useful for sequential recommendation patterns.",
+        "description": "Previous artwork that the user interacted with, useful for sequential recommendation patterns.",
     },
 ]
 
 ranking_feature_descriptions = [
-    {"name": "customer_id", "description": "Unique identifier for each customer."},
+    {"name": "user_id", "description": "Unique identifier for each user."},
     {"name": "artwork_id", "description": "Identifier for the liked artwork."},
-    {"name": "age", "description": "Age of the customer."},
-    {"name": "product_type_name", "description": "Name of the product type."},
-    {"name": "product_group_name", "description": "Name of the product group."},
+    {"name": "age", "description": "Age of the user."},
+    {"name": "label", "description": "Artwork type"},
+    {"name": "title", "description": "Artwork title"},
     {
-        "name": "graphical_appearance_name",
-        "description": "Name of the graphical appearance.",
+        "name": "description",
+        "description": "Artwork appearance.",
     },
-    {"name": "colour_group_name", "description": "Name of the colour group."},
-    {
-        "name": "perceived_colour_value_name",
-        "description": "Name of the perceived colour value.",
-    },
-    {
-        "name": "perceived_colour_master_name",
-        "description": "Name of the perceived colour master.",
-    },
-    {"name": "department_name", "description": "Name of the department."},
-    {"name": "index_name", "description": "Name of the index."},
-    {"name": "index_group_name", "description": "Name of the index group."},
-    {"name": "section_name", "description": "Name of the section."},
-    {"name": "garment_group_name", "description": "Name of the garment group."},
+    {"name": "category", "description": "Artwork category"},
     {
         "name": "label",
         "description": "Label indicating whether the artwork was liked (1) or not (0).",
