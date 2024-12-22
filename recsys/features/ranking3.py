@@ -1,14 +1,14 @@
 import polars as pl
 
-def compute_ranking_dataset(trans_fg, artworks_fg, users_fg) -> pl.DataFrame:
+def compute_ranking_dataset2(trans_df, artworks_df2, users_df) -> pl.DataFrame:
     # Read data from the feature groups
-    trans_df = trans_fg.select(
+    trans_df = trans_df[
         ["artwork_id", "user_id"]
-    ).read(dataframe_type="polars")
-    artworks_df= artworks_fg.select_except(
+    ]
+    artworks_df = artworks_df2.select(pl.exclude(
         ["description", "embeddings", "thumbnail_link"]
-    ).read(dataframe_type="polars")
-    users_df = users_fg.select(["user_id", "age"]).read(dataframe_type="polars")
+    ))
+    users_df = users_df[["user_id", "age"]]
 
     # Convert artwork_id to string in both dataframes before joining
     trans_df = trans_df.with_columns(pl.col("artwork_id").cast(pl.Utf8))
@@ -59,7 +59,7 @@ def compute_ranking_dataset(trans_fg, artworks_fg, users_fg) -> pl.DataFrame:
     ])
 
     # Process item features
-    item_df = artworks_fg.read(dataframe_type="polars")
+    item_df = artworks_df2
     
     # Convert artwork_id to string in item_df before final join
     item_df = item_df.with_columns(pl.col("artwork_id").cast(pl.Utf8))

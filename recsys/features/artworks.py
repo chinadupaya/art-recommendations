@@ -32,6 +32,7 @@ def compute_features_artworks(df: pl.DataFrame) -> pl.DataFrame:
     # df = df.select([col for col in df.columns if not df[col].is_null().any()])
 
     # Remove  column
+    df = df.rename({"id": "artwork_id"})
     columns_to_drop = ["artists_link", "genes_link", "similar_link"]
     existing_columns = df.columns
     columns_to_keep = [col for col in existing_columns if col not in columns_to_drop]

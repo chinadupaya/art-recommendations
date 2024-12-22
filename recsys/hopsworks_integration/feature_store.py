@@ -5,7 +5,7 @@ from loguru import logger
 
 from recsys.config import settings
 from recsys.hopsworks_integration import constants
-# from recsys.features.transactions import month_cos, month_sin
+from recsys.features.transactions import month_cos, month_sin
 
 
 import os
@@ -45,48 +45,47 @@ def create_users_feature_group(fs, df: pd.DataFrame, online_enabled: bool = True
     return users_fg
 
 
-def create_articles_feature_group(
+def create_artworks_feature_group(
     fs,
     df: pd.DataFrame,
-    articles_description_embedding_dim: int,
+    artworks_description_embedding_dim: int,
     online_enabled: bool = True,
 ):
     # Create the Embedding Index for the articles description embedding.
     emb = embedding.EmbeddingIndex()
-    emb.add_embedding("embeddings", articles_description_embedding_dim)
+    emb.add_embedding("embeddings", artworks_description_embedding_dim)
 
-    articles_fg = fs.get_or_create_feature_group(
-        name="articles",
+    artworks_fg = fs.get_or_create_feature_group(
+        name="artworks",
         version=1,
-        description="Fashion items data including type of item, visual description and category",
-        primary_key=["article_id"],
+        description="Artworks data including category, description, and title",
+        primary_key=["artwork_id"],
         online_enabled=online_enabled,
-        features=constants.article_feature_description,
+        features=constants.artwork_feature_description,
         embedding_index=emb,
     )
-    articles_fg.insert(df, wait=True)
+    artworks_fg.insert(df, wait=True)
 
-    return articles_fg
+    return artworks_fg
 
 
-# def create_transactions_feature_group(
-#     fs, df: pd.DataFrame, online_enabled: bool = True
-# ):
-#     trans_fg = fs.get_or_create_feature_group(
-#         name="transactions",
-#         version=1,
-#         description="Transactions data including customer, item, price, sales channel and transaction date",
-#         primary_key=["customer_id", "article_id"],
-#         online_enabled=online_enabled,
-#         transformation_functions=[month_sin, month_cos],
-#         event_time="t_dat",
-#     )
-#     trans_fg.insert(df, wait=True)
+def create_transactions_feature_group(
+    fs, df: pd.DataFrame, online_enabled: bool = True
+):
+    trans_fg = fs.get_or_create_feature_group(
+        name="transactions",
+        version=1,
+        description="Transactions data including customer, artwork, and date",
+        primary_key=["user_id", "artwork_id"],
+        online_enabled=online_enabled,
+        event_time="t_dat",
+    )
+    trans_fg.insert(df, wait=True)
 
-#     for desc in constants.transactions_feature_descriptions:
-#         trans_fg.update_feature_description(desc["name"], desc["description"])
+    for desc in constants.transactions_feature_descriptions:
+        trans_fg.update_feature_description(desc["name"], desc["description"])
 
-#     return trans_fg
+    return trans_fg
 
 
 def create_interactions_feature_group(
@@ -95,8 +94,8 @@ def create_interactions_feature_group(
     interactions_fg = fs.get_or_create_feature_group(
         name="interactions",
         version=1,
-        description="Customer interactions with articles including purchases, clicks, and ignores. Used for building recommendation systems and analyzing user behavior.",
-        primary_key=["customer_id", "article_id"],
+        description="User interactions with artworks including likes, clicks, and ignores. Used for building recommendation systems and analyzing user behavior.",
+        primary_key=["user_id", "artwork_id"],
         online_enabled=online_enabled,
         event_time="t_dat",
     )
@@ -119,7 +118,7 @@ def create_ranking_feature_group(
         name="ranking",
         version=1,
         description="Derived feature group for ranking",
-        primary_key=["customer_id", "article_id"],
+        primary_key=["customer_id", "artwork_id"],
         parents=parents,
         online_enabled=online_enabled,
     )
@@ -144,15 +143,14 @@ def create_candidate_embeddings_feature_group(
     candidate_embeddings_fg = fs.get_or_create_feature_group(
         name="candidate_embeddings",
         embedding_index=embedding_index,  # Specify the Embedding Index
-        primary_key=["article_id"],
+        primary_key=["artwork_id"],
         version=1,
-        description="Embeddings for each article.",
+        description="Embeddings for each artwork.",
         online_enabled=online_enabled,
     )
     candidate_embeddings_fg.insert(df, wait=True)
 
     return candidate_embeddings_fg
-
 
 #########################
 ##### Feature Views #####
@@ -242,8 +240,8 @@ def create_candidate_embeddings_feature_view(fs, fg):
     feature_view = fs.get_or_create_feature_view(
         name="candidate_embeddings",
         version=1,
-        description="Embeddings of each article",
-        query=fg.select(["article_id"]),
+        description="Embeddings of each artwork",
+        query=fg.select(["id"]),
     )
 
     return feature_view

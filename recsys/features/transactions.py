@@ -24,3 +24,29 @@ def compute_features_transactions(df: pl.DataFrame) -> pl.DataFrame:
         .with_columns([(pl.col("t_dat").cast(pl.Int64) // 1_000_000).alias("t_dat")])
     )
 
+@udf(return_type = float, mode="pandas")
+def month_sin(month :pd.Series):
+    """
+    On-demand transformation function that sine of month for cyclical feature encoding.
+
+    Parameters:
+    - month (pd.Series): A pandas series that contains the months
+
+    Returns:
+    - pd.Series: The sine of months
+    """
+    return np.sin(month * (2 * np.pi / 12))
+
+@udf(return_type = float, mode="pandas")
+def month_cos(month :pd.Series):
+    """
+    On-demand transformation function that sine of month for cyclical feature encoding.
+
+    Parameters:
+    - month (pd.Series): A pandas series that contains the months
+
+    Returns:
+    - pd.Series: The cosine of months
+    """
+    return np.cos(month * (2 * np.pi / 12))
+
