@@ -9,17 +9,17 @@ from recsys.features.transactions import month_cos, month_sin
 
 
 import os
-def get_feature_store():
-    # os.environ["HOPSWORKS_API_KEY"]
+def get_feature_store(hopskey):
+    # HOPSWORKS_API_KEY _ os.environ["HOPSWORKS_API_KEY"]
     if settings.HOPSWORKS_API_KEY:
         logger.info("Loging to Hopsworks using HOPSWORKS_API_KEY env var.")
         project = hopsworks.login(
-            api_key_value=settings.HOPSWORKS_API_KEY.get_secret_value()
+            api_key_value=hopskey
             # api_key_value=
         )
     else:
         logger.info("Login to Hopsworks using cached API key.")
-        project = hopsworks.login()
+    project = hopsworks.login(api_key_value=hopskey)
 
     return project, project.get_feature_store()
 
@@ -39,7 +39,7 @@ def create_users_feature_group(fs, df: pd.DataFrame, online_enabled: bool = True
     )
     users_fg.insert(df, wait=True)
 
-    for desc in constants.customer_feature_descriptions:
+    for desc in constants.user_feature_descriptions:
         users_fg.update_feature_description(desc["name"], desc["description"])
 
     return users_fg
@@ -157,83 +157,83 @@ def create_candidate_embeddings_feature_group(
 #########################
 
 
-# def create_retrieval_feature_view(fs):
-#     trans_fg = fs.get_feature_group(name="transactions", version=1)
-#     customers_fg = fs.get_feature_group(name="customers", version=1)
-#     articles_fg = fs.get_feature_group(name="articles", version=1)
+def create_retrieval_feature_view(fs, version):
+    trans_fg = fs.get_feature_group(name="transactions", version=1)
+    users_fg = fs.get_feature_group(name="users", version=1)
+    artworks_fg = fs.get_feature_group(name="artworks", version=1)
 
-#     # You'll need to join these three data sources to make the data compatible
-#     # with out retrieval model. Recall that each row in the `transactions` feature group
-#     # relates information about which customer bought which item.
-#     # You'll join this feature group with the `customers` and `articles` feature groups
-#     # to inject customer and item features into each row.
-#     selected_features = (
-#         trans_fg.select(
-#             ["customer_id", "article_id", "t_dat", "price", "month_sin", "month_cos"]
-#         )
-#         .join(
-#             customers_fg.select(["age", "club_member_status", "age_group"]),
-#             on="customer_id",
-#         )
-#         .join(
-#             articles_fg.select(["garment_group_name", "index_group_name"]),
-#             on="article_id",
-#         )
-#     )
+    # You'll need to join these three data sources to make the data compatible
+    # with out retrieval model. Recall that each row in the `transactions` feature group
+    # relates information about which customer bought which item.
+    # You'll join this feature group with the `customers` and `articles` feature groups
+    # to inject customer and item features into each row.
+    selected_features = (
+        trans_fg.select(
+            ["transaction_id", "user_id", "artwork_id"]
+        )
+        .join(
+            users_fg.select(["literal", "age", "gender", "preference", "age_group"]),
+            on="user_id",
+        )
+        .join(
+            artworks_fg.select(["title", "category", "embeddings"]),
+            on="artwork_id",
+        )
+    )
+    
+    feature_view = fs.get_or_create_feature_view(
+        name="retrieval",
+        query=selected_features,
+        version=version,
+    )
 
-#     feature_view = fs.get_or_create_feature_view(
-#         name="retrieval",
-#         query=selected_features,
-#         version=1,
-#     )
-
-#     return feature_view
+    return feature_view
 
 
-# def create_ranking_feature_views(fs):
-#     customers_fg = fs.get_feature_group(
-#         name="customers",
-#         version=1,
-#     )
+def create_ranking_feature_views(fs):
+    customers_fg = fs.get_feature_group(
+        name="customers",
+        version=1,
+    )
 
-#     articles_fg = fs.get_feature_group(
-#         name="articles",
-#         version=1,
-#     )
+    articles_fg = fs.get_feature_group(
+        name="articles",
+        version=1,
+    )
 
-#     rank_fg = fs.get_feature_group(
-#         name="ranking",
-#         version=1,
-#     )
+    rank_fg = fs.get_feature_group(
+        name="ranking",
+        version=1,
+    )
 
-#     trans_fg = fs.get_feature_group(
-#         name="transactions",
-#         version=1)
+    trans_fg = fs.get_feature_group(
+        name="transactions",
+        version=1)
 
-#     selected_features_customers = customers_fg.select_all()
-#     fs.get_or_create_feature_view(
-#         name="customers",
-#         query=selected_features_customers,
-#         version=1,
-#     )
+    selected_features_customers = customers_fg.select_all()
+    fs.get_or_create_feature_view(
+        name="customers",
+        query=selected_features_customers,
+        version=1,
+    )
 
-#     selected_features_articles = articles_fg.select_except(["embeddings"])
-#     fs.get_or_create_feature_view(
-#         name="articles",
-#         query=selected_features_articles,
-#         version=1,
-#     )
+    selected_features_articles = articles_fg.select_except(["embeddings"])
+    fs.get_or_create_feature_view(
+        name="articles",
+        query=selected_features_articles,
+        version=1,
+    )
 
-#     # Select features
-#     selected_features_ranking = rank_fg.select_except(["customer_id", "article_id"]).join(trans_fg.select(["month_sin", "month_cos"]))
-#     feature_view_ranking = fs.get_or_create_feature_view(
-#         name="ranking",
-#         query=selected_features_ranking,
-#         labels=["label"],
-#         version=1,
-#     )
+    # Select features
+    selected_features_ranking = rank_fg.select_except(["customer_id", "article_id"]).join(trans_fg.select(["month_sin", "month_cos"]))
+    feature_view_ranking = fs.get_or_create_feature_view(
+        name="ranking",
+        query=selected_features_ranking,
+        labels=["label"],
+        version=1,
+    )
 
-#     return feature_view_ranking
+    return feature_view_ranking
 
 
 def create_candidate_embeddings_feature_view(fs, fg):
