@@ -36,13 +36,13 @@ def display_item(item_id, score, artworks_fv, user_id, tracker, source):
 
         # Like button
         buy_key = f"{source}_buy_{item_id}"
-        if st.button("🛒 Buy", key=buy_key):
+        if st.button("💙 Like", key=buy_key):
             # Track interaction
             tracker.track(user_id, item_id, "like")
 
             # Insert transaction
             fg_updater = get_fg_updater()
-            like_data = {"user_id": user_id, "artwork_id": item_id}
+            like_data = {"user_id": user_id, "artwork_id": item_id, "thumbnail_link": image_url}
 
             if fg_updater.insert_transaction(like_data):
                 st.success(f"✅ Item {item_id} liked!")

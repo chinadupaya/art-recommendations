@@ -2,6 +2,7 @@ import logging
 import math
 import random
 from datetime import datetime
+import uuid
 
 from recsys.config import settings
 
@@ -54,6 +55,7 @@ class FeatureGroupUpdater:
             timestamp = datetime.now()
 
             transaction = {
+                "transaction_id":uuid.uuid4(),
                 "t_dat": int(timestamp.timestamp()),
                 "user_id": str(like_data["user_id"]),
                 "artwork_id": str(like_data["artwork_id"]),
@@ -71,11 +73,11 @@ class FeatureGroupUpdater:
             df["user_id"] = df["user_id"].astype(str)
             df["artwork_id"] = df["artwork_id"].astype(str)
             df["thumbnail_link"] = df["thumbnail_link"].astype("str")
-            df["sales_channel_id"] = df["sales_channel_id"].astype("int64")
             df["year"] = df["year"].astype("int32")
             df["month"] = df["month"].astype("int32")
             df["day"] = df["day"].astype("int32")
             df["day_of_week"] = df["day_of_week"].astype("int32")
+            df["transaction_id"] = df["transaction_id"].astype("str")
 
             logger.info(f"Prepared transaction for insertion: {transaction}")
             return df
