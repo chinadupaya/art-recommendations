@@ -88,13 +88,13 @@ def user_recommendations(
                 {"user_id": user_id}
             ]
 
-            prediction = query_model_deployment.predict({
-                "signature_name": "serving_default",
-                "instances": deployment_input
-            })["predictions"]["ranking"]
-            # prediction = query_model_deployment.predict(inputs=deployment_input)[
-            #     "predictions"
-            # ]["ranking"]
+            # prediction = query_model_deployment.predict([{
+            #     "signature_name": "serving_default",
+            #     "instances": deployment_input
+            # }])["predictions"]["ranking"]
+            prediction = query_model_deployment.predict(inputs=deployment_input)[
+                "predictions"
+            ]["ranking"]
 
             # Filter out liked items
             available_items = [
