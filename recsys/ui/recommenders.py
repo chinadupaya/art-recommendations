@@ -85,7 +85,9 @@ def user_recommendations(
             #     {"user_id": user_id, "transaction_date": formatted_timestamp}
             # ]
             deployment_input = [
-                {"user_id": user_id}
+                {
+                    "user_id": user_id
+                }
             ]
 
             # prediction = query_model_deployment.predict([{

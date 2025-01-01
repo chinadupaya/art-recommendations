@@ -22,9 +22,9 @@ class HopsworksQueryModel:
             "user_id": tf.TensorSpec(
                 shape=(None,), dtype=tf.string, name="user_id"
             ),  # Specification for user IDs
-            "age": tf.TensorSpec(
-                shape=(None,), dtype=tf.float64, name="age"
-            ),  # Specification for age
+            # "age": tf.TensorSpec(
+            #     shape=(None,), dtype=tf.float64, name="age"
+            # ),  # Specification for age
         }
 
         query_module_module = QueryModelModule(model=self.model)

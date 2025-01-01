@@ -48,6 +48,7 @@ class Transformer(object):
 
         # Enrich inputs with user age
         inputs["age"] = user_features.age.values[0]
+        # inputs["gender"] = user_features.gender.values[0]
 
         # Calculate the sine and cosine of the month_of_purchase
         # month_of_purchase = datetime.strptime(
