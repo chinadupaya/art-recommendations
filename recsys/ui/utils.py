@@ -24,12 +24,14 @@ def fetch_and_process_image(image_url, width=200, height=300):
 
 
 def process_description(description):
-    details_match = re.search(r"Details: (.+?)(?:\n|$)", description)
-    return details_match.group(1) if details_match else "No details available."
+    return description if description else "No details available"
+    # details_match = re.search(r"Details: (.+?)(?:\n|$)", description)
+    # return details_match.group(1) if details_match else "No details available."
 
 
 def get_item_image_url(item_id, artworks_fv):
-    return artworks_fv.get_feature_vector({"artwork_id": item_id})[-1]
+    # return index of image
+    return artworks_fv.get_feature_vector({"artwork_id": item_id})[3]
 
 
 

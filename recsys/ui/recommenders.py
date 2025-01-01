@@ -30,11 +30,11 @@ def display_item(item_id, score, artworks_fv, user_id, tracker, source):
             tracker.track(user_id, item_id, "click")
             with st.expander("Item Details", expanded=True):
                 description = process_description(
-                    artworks_fv.get_feature_vector({"artwork_id": item_id})[-2]
+                    artworks_fv.get_feature_vector({"artwork_id": item_id})[-1]
                 )
                 st.write(description)
 
-        # Buy button
+        # Like button
         buy_key = f"{source}_buy_{item_id}"
         if st.button("🛒 Buy", key=buy_key):
             # Track interaction
