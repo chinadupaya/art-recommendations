@@ -81,13 +81,20 @@ def user_recommendations(
             st.session_state.last_user_id = user_id
 
             # Get predictions from model
+            # deployment_input = [
+            #     {"user_id": user_id, "transaction_date": formatted_timestamp}
+            # ]
             deployment_input = [
-                {"user_id": user_id, "transaction_date": formatted_timestamp}
+                {"user_id": user_id}
             ]
 
-            prediction = query_model_deployment.predict(inputs=deployment_input)[
-                "predictions"
-            ]["ranking"]
+            prediction = query_model_deployment.predict({
+                "signature_name": "serving_default",
+                "instances": deployment_input
+            })["predictions"]["ranking"]
+            # prediction = query_model_deployment.predict(inputs=deployment_input)[
+            #     "predictions"
+            # ]["ranking"]
 
             # Filter out liked items
             available_items = [

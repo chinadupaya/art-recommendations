@@ -23,18 +23,20 @@ class FeatureGroupUpdater:
         try:
             if "feature_group" not in st.session_state:
                 logger.info("📡 Initializing Hopsworks Feature Groups connection...")
-                project = hopsworks.login(api_key_value=settings.HOPSWORKS_API_KEY.get_secret_value())
-                fs = project.get_feature_store()
+                # project = hopsworks.login(api_key_value="H")
+                # fs = project.get_feature_store(name='id2223artsy_featurestore')
+                project = hopsworks.login()
+                fs = project.get_feature_store(name='id2223artsy_featurestore')
 
                 # Initialize interactions feature group
                 st.session_state.feature_group = fs.get_feature_group(
-                    name="interactions",
+                    "interactions",
                     version=1,
                 )
 
                 # Initialize transactions feature group
                 st.session_state.transactions_fg = fs.get_feature_group(
-                    name="transactions",
+                    "transactions",
                     version=1,
                 )
                 logger.info("✅ Feature Groups connection established")

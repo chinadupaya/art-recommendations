@@ -88,15 +88,15 @@ def main():
     )
 
     # Process any pending interactions with notification
-    # process_pending_interactions(tracker, fg_updater)
+    process_pending_interactions(tracker, fg_updater)
 
     # Interaction dashboard with OpenAI API key field
     # show_interaction_dashboard(tracker, fg_updater)
 
     # Handle page content
-    # user_recommendations(
-    #     articles_fv, ranking_deployment, query_model_deployment, user_id
-    # )
+    user_recommendations(
+        articles_fv, ranking_deployment, query_model_deployment, user_id
+    )
 
 if __name__ == "__main__":
     main()

@@ -112,8 +112,8 @@ class Transformer(object):
             )
 
         ranking_model_inputs["age"] = user_features.age.values[0]
-        ranking_model_inputs["month_sin"] = inputs["month_sin"]
-        ranking_model_inputs["month_cos"] = inputs["month_cos"]
+        # ranking_model_inputs["month_sin"] = inputs["month_sin"]
+        # ranking_model_inputs["month_cos"] = inputs["month_cos"]
 
         # Select only the features required by the ranking model
         ranking_model_inputs = ranking_model_inputs[self.ranking_model_feature_names]

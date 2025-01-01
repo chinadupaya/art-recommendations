@@ -35,7 +35,7 @@ class Transformer(object):
 
         # Extract user_id and transaction_date from the inputs
         user_id = inputs["user_id"]
-        transaction_date = inputs["transaction_date"]
+        # transaction_date = inputs["transaction_date"]
 
         # Extract month from the transaction_date
         # month_of_purchase = datetime.fromisoformat(inputs.pop("transaction_date"))
@@ -50,9 +50,9 @@ class Transformer(object):
         inputs["age"] = user_features.age.values[0]
 
         # Calculate the sine and cosine of the month_of_purchase
-        month_of_purchase = datetime.strptime(
-            transaction_date, "%Y-%m-%dT%H:%M:%S.%f"
-        ).month
+        # month_of_purchase = datetime.strptime(
+        #     transaction_date, "%Y-%m-%dT%H:%M:%S.%f"
+        # ).month
 
         # Calculate the sine and cosine components for the month_of_purchase using on-demand transformation present in "ranking" feature view.
         # feature_vector = self.ranking_fv._batch_scoring_server.compute_on_demand_features(
