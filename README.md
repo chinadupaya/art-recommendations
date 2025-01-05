@@ -62,10 +62,11 @@ The interaction dataset was created using these initial artworks. Further intera
 
 
 ## UI
-For the UI, we used Streamlit. The UI downloads the model from the Hopsworks model registry and defines user profiles. Within the interface, users can be selected, and artworks matching their profiles are recommended. These artworks can be clicked and liked, which refines the interaction data and improves future recommendations.
+For the UI, we used Streamlit. The UI accesses the deployed Hopsworks query model and has defined user profiles. Within the interface, users can be selected, and artworks matching their profiles are recommended. These artworks can be clicked and liked, which refines the interaction data and improves future recommendations.
 
 ## Results
 
+The deployed Streamlit app can be accessed [here](https://chinadupaya-art-recommendations-streamlit-app-7kiwzt.streamlit.app/).
+Due to limitations with the free tier in Hopsworks, users cannot use the deployed model concurrently (only one user can use it a time). In such a case that this is encountered, click "Stop Deployments" and refresh the page to restart the deployments. This might need to be done a few times.
 
-~~Maybe a text how well it worked?~~
-~~Maybe some screenshots?~~
+![UI Output](image.png)
