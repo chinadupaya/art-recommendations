@@ -8,6 +8,14 @@ You'll need the following tools installed locally:
 - [uv v0.4.30](https://github.com/astral-sh/uv) - Python package installer and virtual environment manager
 - [GNU Make 3.81](https://www.gnu.org/software/make/) - Build automation tool
 
+## Cloud Services
+The project requires access to these cloud services:
+
+| Service | Purpose | Cost | Required Credentials | Setup Guide |
+|---------|---------|------|---------------------|-------------|
+| [Hopsworks](https://rebrand.ly/serverless-github) | AI Lakehouse for feature store, model registry, and serving | Free tier available | `HOPSWORKS_API_KEY` | [Create API Key](https://docs.hopsworks.ai/latest/user_guides/projects/api_key/create_api_key/) |
+| [GitHub Actions](https://github.com/features/actions) | Compute & Automation | Free for public repos | - | - |
+
 # 🎯 Getting Started
 
 ## 1. Installation
@@ -22,8 +30,18 @@ This command will:
 - Activate the virtual environment
 - Install all dependencies from `pyproject.toml`
 
+## 2. Environment Configuration
+
+Before running any components:
+1. Create your environment file:
+   ```bash
+   cp .env.example .env
+   ```
+2. Open `.env` and configure the required credentials following the inline comments.
 
 # Project Report
+
+by Lennart Roth and Annysia Dupaya ID2223 - Group 27
 
 ## General description
 
@@ -33,6 +51,7 @@ The goal of the project is to develop a user interaction-based recommender syste
 - The artist
 - The medium it is painted on
 - A broad category
+
 Based on these sources, the models predict how likely it is that a user, with their profile and a list of previously liked artworks, will enjoy another given artwork.
 
 First, the tower model provides a general ranking for each artwork. After filtering for duplicates, already liked artworks, and other criteria, the ranking model offers a fine-grained ranking to determine the order in which artworks should be displayed in the UI.
