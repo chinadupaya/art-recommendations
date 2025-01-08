@@ -17,7 +17,7 @@ logger = logging.getLogger(__name__)
 # Constants
 USER_IDS = [
     "1a8ad298-1b9d-4d7f-af4c-3ba5e82e73aa",
-    "a926fcb4-fcb9-461c-bcf3-94e99087488a",
+    "7990389a-820e-497b-808b-c30f52d5701f",
     "3a0e200e-c233-49ce-bc70-e3ae2e782161",
     "cf8fc740-d851-490e-8dfb-6c853558ffeb",
     "152c7eb1-79d6-48b0-844d-c50f1ad5295c",
